@@ -1,4 +1,5 @@
 *.kotlin_module
+out/
 
 # Compiled class file
 *.class
