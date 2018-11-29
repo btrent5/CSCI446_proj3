@@ -1,5 +1,5 @@
 fun main() {
-    var temp = generateWorld(4, 0.7)
+    var temp = generateWorld(4)
 
     for (row in temp) {
         for (node in row) {

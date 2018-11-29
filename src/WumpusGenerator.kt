@@ -46,38 +46,30 @@ fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<Mutabl
     return world
 }
 
-fun addFeatures(world: MutableList<MutableList<Node>>, pitFreq: Double = 0.2, printing: Boolean = true) {
-
-    if (printing) print("trying to add wumpus")
+fun selectCell(world: MutableList<MutableList<Node>>): Pair<Int, Int> {
     var i = 0
     var j = 0
     var valid = false
-    while (!valid){
+    while (!valid) {
         i = Random.nextInt(world.size)
         j = Random.nextInt(world.size)
         valid = (!(i == 0 && j == 0) && world[i][j].type == ' ')
-        if (printing) print(".")
     }
-    world[i][j].type = 'W'
-    if (printing) println()
+    return Pair(i, j)
+}
 
-    if (printing) print("trying to add gold")
-    i = Random.nextInt(world.size)
-    j = Random.nextInt(world.size)
-    while ((i > 1 && j > 1) && world[i][j].type != ' ') {
-        i = Random.nextInt(world.size)
-        j = Random.nextInt(world.size)
-        if (printing) print(".")
-    }
-    world[i][j].glimmer = true
-    if (printing) println()
+fun addFeatures(world: MutableList<MutableList<Node>>, pitFreq: Double = 0.2) {
+    var temp = selectCell(world)
+    world[temp.first][temp.second].type = 'W'
+    temp = selectCell(world)
+    world[temp.first][temp.second].glimmer = true
 
-    if (printing) println("adding pits")
     for (x in 0 until world.size) {
         for (y in 0 until world.size) {
-            if (Random.nextDouble() <= pitFreq
-                    && !(x == 0 && y == 0)
-                    && world[x][y].type == ' ') {
+            if (Random.nextDouble() <= pitFreq // stochastic element
+                    && !(x == 0 && y == 0) // not the start
+                    && world[x][y].type == ' ' // not the wumpus
+                    && !world[x][y].glimmer) { // not the gold
                 world[x][y].type = '0'
             }
         }
