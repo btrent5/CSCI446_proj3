@@ -1,6 +1,8 @@
 import kotlin.random.Random
 
 fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<MutableList<Node>> {
+    val startI = dimension - 1
+    val startJ = 0
 
 //        create world that is a 2D array of Nodes
     var world = mutableListOf<MutableList<Node>>()
@@ -16,6 +18,9 @@ fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<Mutabl
 //        assigns neighbors for all nodes in the world
     for (i in 0 until world.size) {
         for (j in 0 until world[i].size) {
+//            if a node is that start, mark it
+            if (i == startI && j == startJ) world[i][j].start = true
+
 //            if a node is on the border that neighbor is set to to type '?'
             if (i == 0) {
                 world[i][j].north = Node()
@@ -42,9 +47,11 @@ fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<Mutabl
             }
         }
     }
+
     addFeatures(world, pitFreq)
     return world
 }
+
 
 fun selectCell(world: MutableList<MutableList<Node>>): Pair<Int, Int> {
     var i = 0
@@ -53,7 +60,7 @@ fun selectCell(world: MutableList<MutableList<Node>>): Pair<Int, Int> {
     while (!valid) {
         i = Random.nextInt(world.size)
         j = Random.nextInt(world.size)
-        valid = (!(i == 0 && j == 0) && world[i][j].type == ' ')
+        valid = (!world[i][j].start && world[i][j].type == ' ')
     }
     return Pair(i, j)
 }
@@ -64,13 +71,13 @@ fun addFeatures(world: MutableList<MutableList<Node>>, pitFreq: Double = 0.2) {
     temp = selectCell(world)
     world[temp.first][temp.second].glimmer = true
 
-    for (x in 0 until world.size) {
-        for (y in 0 until world.size) {
+    for (i in 0 until world.size) {
+        for (j in 0 until world.size) {
             if (Random.nextDouble() <= pitFreq // stochastic element
-                    && !(x == 0 && y == 0) // not the start
-                    && world[x][y].type == ' ' // not the wumpus
-                    && !world[x][y].glimmer) { // not the gold
-                world[x][y].type = '0'
+                    && !world[i][j].start // not the start
+                    && world[i][j].type == ' ' // not the wumpus
+                    && !world[i][j].glimmer) { // not the gold
+                world[i][j].type = '0'
             }
         }
     }
@@ -79,4 +86,3 @@ fun addFeatures(world: MutableList<MutableList<Node>>, pitFreq: Double = 0.2) {
         row.forEach { node: Node -> node.updateState() }
     }
 }
-
