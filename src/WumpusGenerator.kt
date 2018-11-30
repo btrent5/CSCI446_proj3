@@ -1,6 +1,6 @@
 import kotlin.random.Random
 
-fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<MutableList<Node>> {
+fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): Pair<MutableList<MutableList<Node>>, Pair<Int, Int>> {
     val startI = dimension - 1
     val startJ = 0
 
@@ -49,7 +49,7 @@ fun generateWorld(dimension: Int = 0, pitFreq: Double = 0.2): MutableList<Mutabl
     }
 
     addFeatures(world, pitFreq)
-    return world
+    return Pair(world, Pair(startI, startJ))
 }
 
 
