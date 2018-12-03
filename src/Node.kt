@@ -10,6 +10,10 @@ class Node(var type: Char = '?') {
     var breeze = false
     var glimmer = false
 
+    var visited = false
+    var safe = true
+    var possibleValue = mutableListOf<Char>()
+
     fun updateState() {
         this.stench = this.neighbors.any { node -> node.type == 'W' && this.type == ' ' }
         this.breeze = this.neighbors.any { node -> node.type == '0' && this.type == ' ' }
