@@ -29,7 +29,14 @@ class Agent(private val goldPoints: Int = 1000, private val movePoints: Int = 1,
         loop@ while(safeNeighbors.isNotEmpty()){
             if(hasGold) break
             var nodeAhead = nodeAhead()
-            if (nodeAhead.type != '?' && nodeAhead.safe && !nodeAhead.visited ){
+            if(currentNode.stench && hasArrow){
+                hasArrow = false
+                print("")
+                if(nodeAhead.type == 'W'){
+                    heardScream = true
+                }
+            }
+            else if (nodeAhead.type != '?' && nodeAhead.safe && !nodeAhead.visited ){
                 this.move()
             }
             else{
@@ -152,7 +159,11 @@ class Agent(private val goldPoints: Int = 1000, private val movePoints: Int = 1,
             currentNode.neighbors.forEach { neighbor ->
                 if (!neighbor.safe && neighbor.possibleValue.contains('0'))
                     neighbor.safe = true
-                else if (neighbor.possibleValue.isEmpty()) {
+                else if(this.heardScream && neighbor.possibleValue.contains('W')){
+                    neighbor.possibleValue.remove('W')
+                    if (neighbor.possibleValue.isEmpty()) neighbor.safe = true
+                }
+                else if (!this.heardScream && neighbor.possibleValue.isEmpty()) {
                     neighbor.possibleValue.add('W')
                     neighbor.safe = false
                 }
